@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="assets/css/test-style.css" />
+  </head>
+  <body>
+    <div id="toast"></div>
+
+    <div onclick="ShowSuccessToast()" class="btn btn--success">Success</div>
+    <div onclick="ShowErrorToast()" class="btn btn--danger">Error</div>
+
+    <script>
+      function toast({
+        title = "",
+        message = "",
+        type = "success",
+        duration = 3000,
+      }) {
+        const main = document.getElementById("toast");
+        if (main) {
+          const toast = document.createElement("div");
+
+          // Auto remove
+
+          const autoRemove = setTimeout(function () {
+            main.removeChild(toast);
+          }, duration + 1000);
+
+          //   Remove toast (click)
+          toast.onclick = function (e) {
+            if (e.target.closest(".toast__close")) {
+              main.removeChild(toast);
+              clearTimeout(autoRemove);
+            }
+          };
+          const icons = {
+            success: "fa-solid fa-circle-check",
+            error: "fa-solid fa-circle-exclamation",
+            warning: "fa-solid fa-triangle-exclamation",
+          };
+
+          const icon = icons[type];
+          const delay = (duration / 1000).toFixed(2);
+          toast.classList.add("toast", `toast--${type}`);
+          toast.style.animation = `FadeToastIn 0.5s ease, FadeOut 1s ease ${delay}s forwards`;
+          toast.innerHTML = `
+                <div class="toast__icon">
+                    <i class="${icon}"></i>
+                </div>
+                <div class="toast__body">
+                    <h3 class="toast__title">${title}</h3>
+                    <p class="toast__message">${message}</p>
+                </div>
+                <div class="toast__close">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>`;
+          main.appendChild(toast);
+        }
+      }
+
+      function ShowSuccessToast() {
+        toast({
+          title: "Success",
+          message: "Your access was completed",
+          type: "success",
+          duration: 1500,
+        });
+      }
+      function ShowErrorToast() {
+        toast({
+          title: "Error",
+          message: "Your access was denied",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    </script>
+  </body>
+</html>
